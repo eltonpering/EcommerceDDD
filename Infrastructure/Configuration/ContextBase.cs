@@ -1,9 +1,10 @@
 ﻿using Entities.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Configuration
 {
-    public class ContextBase : DbContext
+    public class ContextBase : IdentityDbContext<ApplicationUser>
     {
         public ContextBase(DbContextOptions<ContextBase> options) : base(options)
         {
@@ -17,14 +18,14 @@ namespace Infrastructure.Configuration
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer(GetStringConectionConfig());
+                optionsBuilder.UseNpgsql(GetStringConectionConfig());
                 base.OnConfiguring(optionsBuilder);
             }
         }
 
         private string GetStringConectionConfig()
         {
-            string strCon = "Data Source=DESKTOP-HVNTI80\\DESENVOLVIMENTO;Initial Catalog=DDD_ECOMMERCE;Integrated Security=False;User ID=sa;Password=1234;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False";
+            string strCon = "User ID=postgres;Password=master;Server=localhost;Port=5432;Database=DDD_ECOMMERCE;Integrated Security=true; Pooling=true;";
             return strCon;
         }
 
