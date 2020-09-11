@@ -7,7 +7,7 @@ namespace Entities.Entities
 {
 
     //IdentityUser tabela .net core
-    public class ApplicationUser : IdentityUser<string>
+    public class ApplicationUser : IdentityUser
     {
 
         [Column("USR_CPF")]
