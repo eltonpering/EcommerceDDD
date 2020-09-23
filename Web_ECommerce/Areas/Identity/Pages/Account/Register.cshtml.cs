@@ -52,7 +52,45 @@ namespace Web_ECommerce.Areas.Identity.Pages.Account
             public string Email { get; set; }
 
             [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            [MaxLength(50)]
+            [Display(Name = "CPF")]
+            public string CPF { get; set; }
+
+            [Display(Name = "Idade")]
+            public int Idade { get; set; }
+
+            [Required]
+            [MaxLength(255)]
+            [Display(Name = "Nome")]
+            public string Nome { get; set; }
+
+            [Required]
+            [MaxLength(15)]
+            [Display(Name = "CEP")]
+            public string CEP { get; set; }
+
+            [Required]
+            [MaxLength(255)]
+            [Display(Name = "Endereço")]
+            public string Endereco { get; set; }
+
+
+            [MaxLength(450)]
+            [Display(Name = "Complemento de Endereço")]
+            public string ComplementoEndereco { get; set; }
+
+
+            [MaxLength(20)]
+            [Display(Name = "Celular")]
+            public string Celular { get; set; }
+
+            [MaxLength(20)]
+            [Display(Name = "Telefone")]
+            public string Telefone { get; set; }
+
+
+            [Required]
+            [StringLength(100, ErrorMessage = "O {0} deve ter ao menos {2} e no máximo {1} caracteres.", MinimumLength = 6)]
             [DataType(DataType.Password)]
             [Display(Name = "Password")]
             public string Password { get; set; }
@@ -75,7 +113,21 @@ namespace Web_ECommerce.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email };
+                var user = new ApplicationUser
+                {
+                    UserName = Input.Email,
+                    Email = Input.Email,
+                    Celular = Input.Celular,
+                    CEP = Input.CEP,
+                    CPF = Input.CPF,
+                    Telefone = Input.Telefone,
+                    Endereco = Input.Endereco,
+                    ComplementoEndereco = Input.ComplementoEndereco,
+                    Idade = Input.Idade,
+                    Nome = Input.Nome,
+                    Estado = true,
+                    Tipo = Entities.Entities.Enums.TipoUsuario.Comum,
+                };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
@@ -89,8 +141,8 @@ namespace Web_ECommerce.Areas.Identity.Pages.Account
                         values: new { area = "Identity", userId = user.Id, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
 
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    await _emailSender.SendEmailAsync(Input.Email, "Confirmar seu e-mail",
+                        $"Por favor confirmar sua conta para <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
