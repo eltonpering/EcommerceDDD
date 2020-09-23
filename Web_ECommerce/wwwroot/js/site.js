@@ -9,8 +9,6 @@ var ObjetoAlerta = new Object();
 ObjetoAlerta.AlertarTela = function (tipo, mensagem) {
 
 
-    debugger;
-
     $("#AlertaJavaScript").html("");
 
     // tipo
