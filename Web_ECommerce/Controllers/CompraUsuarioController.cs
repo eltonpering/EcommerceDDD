@@ -1,24 +1,68 @@
-﻿using ApplicationApp.Interfaces;
+﻿using System;
+using System.Threading.Tasks;
+using ApplicationApp.Interfaces;
 using Entities.Entities;
 using Entities.Entities.Enums;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Threading.Tasks;
+using Web_ECommerce.Models;
 
 namespace Web_ECommerce.Controllers
 {
-    public class CompraUsuarioController : Controller
+    public class CompraUsuarioController : HelpQrCode
     {
 
         public readonly UserManager<ApplicationUser> _userManager;
         public readonly InterfaceCompraUsuarioApp _InterfaceCompraUsuarioApp;
+        private IWebHostEnvironment _environment;
 
-        public CompraUsuarioController(UserManager<ApplicationUser> userManager, InterfaceCompraUsuarioApp InterfaceCompraUsuarioApp)
+        public CompraUsuarioController(UserManager<ApplicationUser> userManager, InterfaceCompraUsuarioApp InterfaceCompraUsuarioApp, IWebHostEnvironment environment)
         {
             _userManager = userManager;
             _InterfaceCompraUsuarioApp = InterfaceCompraUsuarioApp;
+            _environment = environment;
         }
+
+
+        public async Task<IActionResult> FinalizarCompra()
+        {
+            var usuario = await _userManager.GetUserAsync(User);
+            var compraUsuario = await _InterfaceCompraUsuarioApp.CarrinhoCompras(usuario.Id);
+            return View(compraUsuario);
+        }
+
+
+        public async Task<IActionResult> MinhasCompras(bool mensagem = false)
+        {
+            var usuario = await _userManager.GetUserAsync(User);
+            var compraUsuario = await _InterfaceCompraUsuarioApp.ProdutosComprados(usuario.Id);
+
+            if (mensagem)
+            {
+                ViewBag.Sucesso = true;
+                ViewBag.Mensagem = "Compra efetivada com sucesso. Pague o boleto para garantir sua compra!";
+            }
+
+            return View(compraUsuario);
+        }
+
+
+        public async Task<IActionResult> ConfirmaCompra()
+        {
+            var usuario = await _userManager.GetUserAsync(User);
+
+            var sucesso = await _InterfaceCompraUsuarioApp.ConfirmaCompraCarrinhoUsuario(usuario.Id);
+
+            if (sucesso)
+            {
+                return RedirectToAction("MinhasCompras", new { mensagem = true });
+            }
+            else
+                return RedirectToAction("FinalizarCompra");
+        }
+
+
 
 
         [HttpPost("/api/AdicionarProdutoCarrinho")]
@@ -39,15 +83,25 @@ namespace Web_ECommerce.Controllers
             }
 
             return Json(new { sucesso = false });
+
         }
 
+        public async Task<IActionResult> Imprimir()
+        {
+            var usuario = await _userManager.GetUserAsync(User);
+
+            var compraUsuario = await _InterfaceCompraUsuarioApp.ProdutosComprados(usuario.Id);
+
+            return await Download(compraUsuario, _environment);
+
+        }
 
         [HttpGet("/api/QtdProdutosCarrinho")]
         public async Task<JsonResult> QtdProdutosCarrinho()
         {
             var usuario = await _userManager.GetUserAsync(User);
-            var qtd = 0;
 
+            var qtd = 0;
 
             if (usuario != null)
             {

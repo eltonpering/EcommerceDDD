@@ -1,10 +1,14 @@
 ﻿using Entities.Entities.Enums;
 using Entities.Notifications;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text;
 
 namespace Entities.Entities
 {
+
     [Table("TB_COMPRA_USUARIO")]
     public class CompraUsuario : Notifies
     {
@@ -32,5 +36,23 @@ namespace Entities.Entities
         [Column(Order = 1)]
         public string UserId { get; set; }
         public virtual ApplicationUser ApplicationUser { get; set; }
+
+
+        [NotMapped]
+        [Display(Name = "Quantidade Total")]
+        public int QuantidadeProdutos { get; set; }
+
+        [NotMapped]
+        [Display(Name = "Valor Total")]
+        public decimal ValorTotal { get; set; }
+
+        [NotMapped]
+        [Display(Name = "Endereço de entrega")]
+        public string EnderecoCompleto { get; set; }
+
+        [NotMapped]
+        public List<Produto> ListaProdutos { get; set; }
+
+
     }
 }
