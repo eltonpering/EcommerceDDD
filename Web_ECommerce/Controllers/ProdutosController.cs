@@ -1,8 +1,13 @@
-﻿using System.Linq;
+﻿using System;
+using System.IO;
+using System.Linq;
+using System.Security;
+using System.Security.Permissions;
 using System.Threading.Tasks;
 using ApplicationApp.Interfaces;
 using Entities.Entities;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,12 +25,14 @@ namespace Web_ECommerce.Controllers
 
         public readonly InterfaceCompraUsuarioApp _InterfaceCompraUsuarioApp;
 
-        public ProdutosController(InterfaceProductApp InterfaceProductApp, UserManager<ApplicationUser> userManager, InterfaceCompraUsuarioApp InterfaceCompraUsuarioApp)
+        private IWebHostEnvironment _environment;
+
+        public ProdutosController(InterfaceProductApp InterfaceProductApp, UserManager<ApplicationUser> userManager, InterfaceCompraUsuarioApp InterfaceCompraUsuarioApp, IWebHostEnvironment environment)
         {
             _InterfaceProductApp = InterfaceProductApp;
             _userManager = userManager;
-
             _InterfaceCompraUsuarioApp = InterfaceCompraUsuarioApp;
+            _environment = environment;
         }
 
         // GET: ProdutosController
@@ -71,6 +78,8 @@ namespace Web_ECommerce.Controllers
 
                     return View("Create", produto);
                 }
+
+                await SalvarImagemProduto(produto);
                 
             }
             catch
@@ -190,6 +199,38 @@ namespace Web_ECommerce.Controllers
             {
                 return View();
             }
+        }
+
+        public async Task SalvarImagemProduto(Produto produtoTela)
+        {
+            try
+            {
+                var produto = await _InterfaceProductApp.GetEntityById(produtoTela.Id);
+
+                if (produtoTela.Imagem != null)
+                {
+                    var webRoot = _environment.WebRootPath;
+                    var permissionSet = new PermissionSet(PermissionState.Unrestricted);
+                    var writePermission = new FileIOPermission(FileIOPermissionAccess.Append, string.Concat(webRoot, "/imgProdutos"));
+                    permissionSet.AddPermission(writePermission);
+
+                    var Extension = System.IO.Path.GetExtension(produtoTela.Imagem.FileName);
+
+                    var NomeArquivo = string.Concat(produto.Id.ToString(), Extension);
+
+                    var diretorioArquivoSalvar = string.Concat(webRoot, "\\imgProdutos\\", NomeArquivo);
+
+                    produtoTela.Imagem.CopyTo(new FileStream(diretorioArquivoSalvar, FileMode.Create));
+
+                    produto.Url = string.Concat("https://localhost:5001", "/imgProdutos/", NomeArquivo);
+
+                    await _InterfaceProductApp.UpdateProduct(produto);
+                }
+            }
+            catch (Exception erro)
+            {
+            }
+
         }
 
     }

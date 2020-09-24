@@ -7,7 +7,7 @@
 
 
 <p>
-    <a asp-action="Create">clique aqui para vender um produto.</a>
+    <a asp-action="Create">Clique aqui para vender um produto.</a>
 </p>
 <table class="table">
     <thead>
@@ -16,6 +16,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Nome)
             </th>
+            <th>Imagem</th>
             <th>
                 @Html.DisplayNameFor(model => model.Descricao)
             </th>
@@ -37,6 +38,14 @@
 
                 <td>
                     @Html.DisplayFor(modelItem => item.Nome)
+                </td>
+                <td>
+                    @{
+                        if (!string.IsNullOrWhiteSpace(item.Url))
+                        {
+                            <img width="80" height="80" src=@item.Url />
+                        }
+                    }
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Descricao)

@@ -48,12 +48,20 @@ ObjetoVenda.CarregaProdutos = function () {
 
             data.forEach(function (Entitie) {
 
+                debugger;
+
                 htmlConteudo += " <div class='col-xs-12 col-sm-4 col-md-4 col-lg-4'>";
 
                 var idNome = "nome_" + Entitie.id;
                 var idQtd = "qtd_" + Entitie.id;
 
-                htmlConteudo += "<label id='" + idNome + "' > Produto: " + Entitie.nome + "</label></br>";
+                htmlConteudo += "</br><label id='" + idNome + "' > Produto: " + Entitie.nome + "</label></br>";
+
+                if (Entitie.url != null && Entitie.url != "" && Entitie.url != undefined) {
+
+                    htmlConteudo += "<img width='200' height='100' src='" + Entitie.url + "'/></br>";
+                }
+
                 htmlConteudo += "<label>  Valor: " + Entitie.valor + "</label></br>";
 
                 htmlConteudo += "Quantidade : <input type'number' value='1' id='" + idQtd + "'>";
