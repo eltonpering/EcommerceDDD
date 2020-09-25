@@ -12,12 +12,12 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Repository.Repositories
 {
-    public class RepositoryProdutct : RepositoryGenerics<Produto>, IProduct
+    public class RepositoryProduct : RepositoryGenerics<Produto>, IProduct
     {
         private readonly DbContextOptions<ContextBase> _optionsbuilder;
 
 
-        public RepositoryProdutct()
+        public RepositoryProduct()
         {
             _optionsbuilder = new DbContextOptions<ContextBase>();
         }

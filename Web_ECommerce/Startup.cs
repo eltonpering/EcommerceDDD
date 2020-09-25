@@ -41,7 +41,7 @@ namespace Web_ECommerce
 
             //INTERFACE E REPOSITORIO
             services.AddSingleton(typeof(IGeneric<>), typeof(RepositoryGenerics<>));
-            services.AddSingleton<IProduct, RepositoryProdutct>();
+            services.AddSingleton<IProduct, RepositoryProduct>();
             services.AddSingleton<ICompraUsuario, RepositoryCompraUsuario>();
 
             //INTERFACE APLICAÇÃO
