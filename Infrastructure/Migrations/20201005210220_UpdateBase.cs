@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Infrastructure.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class UpdateBase : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -177,7 +177,8 @@ namespace Infrastructure.Migrations
                     UserId = table.Column<string>(nullable: true),
                     PRD_ESTADO = table.Column<bool>(nullable: false),
                     PRD_DATA_CADASTRO = table.Column<DateTime>(nullable: false),
-                    PRD_DATA_ALTERACAO = table.Column<DateTime>(nullable: false)
+                    PRD_DATA_ALTERACAO = table.Column<DateTime>(nullable: false),
+                    PRD_URL = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {

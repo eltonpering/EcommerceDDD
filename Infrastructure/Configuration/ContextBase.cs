@@ -35,7 +35,8 @@ namespace Infrastructure.Configuration
 
         private string GetStringConectionConfig()
         {
-            string strCon = "User ID=postgres;Password=master;Server=localhost;Port=5432;Database=DDD_ECOMMERCE;Integrated Security=true; Pooling=true;";
+            //string strCon = "User ID=postgres;Password=master;Server=localhost;Port=5432;Database=DDD_ECOMMERCE;Integrated Security=true; Pooling=true;";
+            string strCon = "User ID=eltonpering83@develton83;Password=Elton,83;SslMode=Require;Server=develton83.postgres.database.azure.com;Port=5432;Database=DDD_ECOMMERCE;Integrated Security=true; Pooling=true;";
             return strCon;
         }
     }
